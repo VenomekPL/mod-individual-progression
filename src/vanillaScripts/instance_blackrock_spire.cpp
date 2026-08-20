@@ -98,7 +98,8 @@ public:
             SolakarState       = NOT_STARTED;
             SolakarSummons.clear();
             VaelastraszState   = NOT_STARTED;
-            UBRSDoorOpen = false;
+            // Realm: always open. Classic seal/LFG gating is not used here.
+            UBRSDoorOpen = true;
         }
 
         void CreatureLooted(Creature* creature, LootType loot) override
@@ -325,14 +326,9 @@ public:
                 case GO_UBRS_ENTER_BRAZIER_4:
                 case GO_UBRS_ENTER_BRAZIER_5:
                 case GO_UBRS_ENTER_BRAZIER_6:
-                    if (UBRSDoorOpen)
-                    {
-                        go->SetGoState(GO_STATE_ACTIVE);
-                    }
-                    else
-                    {
-                        go->SetGoState(GO_STATE_READY);
-                    }
+                    // Always open. IP vanilla + LFG would otherwise leave this shut
+                    // with no WotLK way to open it (Seal of Ascension is not a key).
+                    go->SetGoState(GO_STATE_ACTIVE);
                     break;
             }
         }
@@ -821,21 +817,7 @@ public:
             if (InstanceScript* instance = player->GetInstanceScript())
             {
                 instance->SetData(AREATRIGGER_DRAGONSPIRE_HALL, DATA_DRAGONSPIRE_ROOM);
-
-                // If LFG, UBRS door always closed
-                bool canOpenDoor = true;
-                if (Group const* group = player->GetGroup())
-                {
-                    if (sLFGMgr->IsLfgGroup(group->GetGUID()))
-                    {
-                        canOpenDoor = false;
-                    }
-                }
-
-                if (canOpenDoor && player->HasItemCount(ITEM_SEAL_OF_ASCENSION, 1))
-                {
-                    instance->SetData(AREATRIGGER_DRAGONSPIRE_HALL, DATA_UBRS_DOOR_OPEN);
-                }
+                instance->SetData(AREATRIGGER_DRAGONSPIRE_HALL, DATA_UBRS_DOOR_OPEN);
 
                 return true;
             }

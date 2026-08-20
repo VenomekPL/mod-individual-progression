@@ -581,13 +581,15 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 (@WPID+220, 12, -111.225, -495.154, -18.4563, 3.19659, 0, 0, 0, 100, 0);
 
 
-UPDATE `gameobject` SET `animprogress` = 100, `state` = 1 WHERE `id` = 164725; -- Dragonspine Door
-UPDATE `gameobject` SET `animprogress` = 100, `state` = 1 WHERE `id` = 175528; -- Doodad_DarkIronBrazier01
-UPDATE `gameobject` SET `animprogress` = 100, `state` = 1 WHERE `id` = 175529; -- Doodad_DarkIronBrazier02
-UPDATE `gameobject` SET `animprogress` = 100, `state` = 1 WHERE `id` = 175530; -- Doodad_DarkIronBrazier03
-UPDATE `gameobject` SET `animprogress` = 100, `state` = 1 WHERE `id` = 175531; -- Doodad_DarkIronBrazier04
-UPDATE `gameobject` SET `animprogress` = 100, `state` = 1 WHERE `id` = 175532; -- Doodad_DarkIronBrazier05
-UPDATE `gameobject` SET `animprogress` = 100, `state` = 1 WHERE `id` = 175533; -- Doodad_DarkIronBrazier06
+-- Realm: keep Dragonspine Door + braziers open. Classic Seal of Ascension
+-- gating has no WotLK key equivalent; IP used to force these closed.
+UPDATE `gameobject` SET `animprogress` = 100, `state` = 0 WHERE `id` = 164725; -- Dragonspine Door
+UPDATE `gameobject` SET `animprogress` = 100, `state` = 0 WHERE `id` = 175528; -- Doodad_DarkIronBrazier01
+UPDATE `gameobject` SET `animprogress` = 100, `state` = 0 WHERE `id` = 175529; -- Doodad_DarkIronBrazier02
+UPDATE `gameobject` SET `animprogress` = 100, `state` = 0 WHERE `id` = 175530; -- Doodad_DarkIronBrazier03
+UPDATE `gameobject` SET `animprogress` = 100, `state` = 0 WHERE `id` = 175531; -- Doodad_DarkIronBrazier04
+UPDATE `gameobject` SET `animprogress` = 100, `state` = 0 WHERE `id` = 175532; -- Doodad_DarkIronBrazier05
+UPDATE `gameobject` SET `animprogress` = 100, `state` = 0 WHERE `id` = 175533; -- Doodad_DarkIronBrazier06
 
 /* Bodley - Dungeon Set upgrade quest line */
 DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 19 AND `ConditionTypeOrReference` = 8 AND `SourceEntry` IN (8985);
