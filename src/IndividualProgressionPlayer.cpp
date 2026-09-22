@@ -1157,30 +1157,41 @@ public:
    
             if (killed->GetEntry() == COLOSSUS_ZORA || killed->GetEntry() == COLOSSUS_REGAL || killed->GetEntry() == COLOSSUS_ASHI)
             {
-                // no group
+                uint32 questId = 0;
                 if (killed->GetEntry() == COLOSSUS_ZORA)
-                    killer->CompleteQuest(QUEST_COLOSSUS_ZORA);
+                    questId = QUEST_COLOSSUS_ZORA;
                 else if (killed->GetEntry() == COLOSSUS_REGAL)
-                    killer->CompleteQuest(QUEST_COLOSSUS_REGAL);
-                else if (killed->GetEntry() == COLOSSUS_ASHI)
-                    killer->CompleteQuest(QUEST_COLOSSUS_ASHI);    
-               
+                    questId = QUEST_COLOSSUS_REGAL;
+                else
+                    questId = QUEST_COLOSSUS_ASHI;
+
+                // Event quests (SpecialFlags EXPLORATION_OR_EVENT): script must complete.
+                // Credit every real player in loot/group range with the quest incomplete —
+                // party and raid (Flags RAID), including when a bot lands the killing blow.
+                auto tryCredit = [&](Player* member)
+                {
+                    if (!member || !sIndividualProgression->isNormalAccount(member))
+                        return;
+                    if (member->GetQuestStatus(questId) != QUEST_STATUS_INCOMPLETE)
+                        return;
+                    if (!member->IsAtLootRewardDistance(killed))
+                        return;
+                    member->CompleteQuest(questId);
+                };
+
+                tryCredit(killer);
+
                 if (group)
                 {
                     for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
-                    {
-                        Player* member = itr->GetSource();
-                        if (!member || !sIndividualProgression->isNormalAccount(member))
-                            continue;
-
-                        if (killed->GetEntry() == COLOSSUS_ZORA)
-                            member->CompleteQuest(QUEST_COLOSSUS_ZORA);
-                        else if (killed->GetEntry() == COLOSSUS_REGAL)
-                            member->CompleteQuest(QUEST_COLOSSUS_REGAL);
-                        else if (killed->GetEntry() == COLOSSUS_ASHI)
-                            member->CompleteQuest(QUEST_COLOSSUS_ASHI);
-                    }
+                        tryCredit(itr->GetSource());
                 }
+
+                // Nearby map players (covers raid/party edge cases and tag oddities)
+                Map::PlayerList const& players = killed->GetMap()->GetPlayers();
+                for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                    tryCredit(itr->GetSource());
+
                 return;
             }
 
