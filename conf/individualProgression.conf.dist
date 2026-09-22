@@ -122,6 +122,17 @@ IndividualProgression.doableNaxx40Bosses_Gluth = 0
 IndividualProgression.doableNaxx40Bosses_Patchwerk = 0
 IndividualProgression.doableNaxx40Bosses_Razuvious = 0
 
+# IndividualProgression.AQGates.StayOpen
+#
+#        Description: After Simply Bang a Gong / Bang a Gong opens the shared Silithus
+#                     AQ gates, keep them open instead of closing after 5 minutes.
+#                     Recommended for Individual Progression (outdoor AQ war is long).
+#
+#        Default:     1 - Stay open (permanent until server restart / bang re-opens)
+#                     0 - Classic 5-minute close after the opening ceremony
+#
+IndividualProgression.AQGates.StayOpen = 1
+
 # IndividualProgression.MoltenCore.ManualRuneHandling
 #
 #        Description: Defines whether Molten Core runes are handled manually (dousing through Aqual Quintessence)

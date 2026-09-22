@@ -360,7 +360,17 @@ public:
 
         void HandleWarStage()
         {
-            // Not handled in Individual Progression, so we go right to resetting the gate timer
+            // Classic closes the shared world gates after a short ceremony window.
+            // Individual Progression's outdoor AQ war is much longer, and the 5-minute
+            // reset blocks every PRE_AQ player (not just the one who banged the gong).
+            // Keep gates open for the whole realm once opened unless config disables it.
+            if (sConfigMgr->GetOption<bool>("IndividualProgression.AQGates.StayOpen", true))
+            {
+                eventTimer = 0;
+                eventStage = STAGE_OPEN_GATES;
+                return;
+            }
+
             NextStage(5 * MINUTE * IN_MILLISECONDS);
         }
 
